@@ -1,0 +1,20 @@
+username: tech_support
+
+oauth:
+  :consumer_key: CONSUMER_KEY
+  :consumer_secret: CONSUMER_SECRET
+  :oauth_token: OAUTH_TOKE
+  :oauth_token_secret: OAUTH_TOKEN_SECRET
+
+mail:
+  delivery_method: :smtp
+  delivery_configuration: 
+    :address: mail.example.com
+    :port: 587
+    :domain: example.com
+    :user_name: tech_support
+    :password: tech_pass
+    :authentication: plain
+    :enable_starttls_auto: true
+  to: support@example.com
+

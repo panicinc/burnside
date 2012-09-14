@@ -1,0 +1,9 @@
+From: "<%= @mention.user.name %>" <twitter+<%= @mention.user.screen_name%>@<%= @config['mail']['delivery_configuration']['domain']%>>
+Subject: Tweet from <%= @mention.user.name %> (@<%= @mention.user.screen_name %>)
+To: <%= @config['mail']['to'] %>
+Message-Id: <<%= @mention.id %>@twitter.<%= @config['mail']['delivery_configuration']['domain']%>>
+Content-Type: text/plain; charset=UTF-8
+
+<%= @mention.text %>
+
+<%= @status_url %>
