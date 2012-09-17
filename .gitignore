@@ -1,2 +1,3 @@
 config/*.erb
 config/*.yml
+*.status
