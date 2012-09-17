@@ -17,4 +17,5 @@ mail:
     :authentication: plain
     :enable_starttls_auto: true
   to: support@example.com
+  mailbox: twitter
 
