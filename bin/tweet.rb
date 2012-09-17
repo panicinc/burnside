@@ -5,11 +5,9 @@ require "bundler/setup"
 require "twitter"
 require 'optparse'
 require 'pp'
-require 'date'
 require 'oj'
 require 'mail'
 require 'uri'
-require 'yaml'
 require 'erb'
 
 options = {}
@@ -63,20 +61,37 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 	exit
 end
 
+
 @config = YAML.load_file(options[:config_file])
-templateFile = 'config/' + @config['username'] + "_reply.erb"
-renderer = ERB.new(IO.read(templateFile))
 
 mail = Mail.new(ARGF.read())
 
-mail.to.first =~ /^twitter\+([A-Za-z0-9_]+)@panic.com/
-@to = "@" + $1
-@sig = "-" + mail[:from].decoded.chars.first
+@to = "@" + /^twitter\+([A-Za-z0-9_]+)@panic.com/.match(mail.to.first)[1] + " "
 
-mail.body.decoded =~ /(.*)(On.*wrote:.*)/m
-@reply_text = $1.strip
+@sig = " -" + mail[:from].decoded.chars.first
 
-msg = renderer.result()
+reply_status_id = /^<(\d+)@.*>/.match(mail[:in_reply_to].decoded)[1]
+
+body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
+
+# Strip out the email signature
+@reply_text = /(.*)--/m.match(body)[1].strip
+
+meta_count = "#{@to}#{@sig}".chars.count
+
+msg = "#{@to} #{@reply_text} #{@sig}"
+
+puts msg if options[:verbose]
 
 char_count = msg.chars.count
 
+if char_count > 140
+	puts "Your message is too long: #{char_count} characters"
+	exit(1)
+end
+
+
+@client = Twitter::Client.new(@config['oauth'])
+@client.user(@config['username'])
+
+@client.update(msg, {:in_reply_to_status_id => reply_status_id, :trim_user => 1}) unless options[:dryrun]
