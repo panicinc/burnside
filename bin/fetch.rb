@@ -68,8 +68,9 @@ end
 statusFile = @config['username'] + ".status"
 templateFile = 'config/' + @config['username'] + ".erb"
 
-
 lastStatusID = IO.read(statusFile) if File.exists?(statusFile)
+
+lastStatusID = nil if options[:dryrun]
 
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
@@ -84,8 +85,7 @@ end
 exit if mentions.count == 0
 
 latestStatusID = mentions.first.id
-File.open(statusFile, 'w') {|f| f.write(latestStatusID) }
-
+File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
 	
 renderer = ERB.new(IO.read(templateFile))
 
@@ -97,9 +97,7 @@ mentions.each do |@mention|
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	
-	puts mail.to_s
+	puts mail.to_s if options[:verbose]
 
 	mail.deliver
 end
-
-
