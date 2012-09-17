@@ -64,7 +64,10 @@ end
 
 @config = YAML.load_file(options[:config_file])
 
-mail = Mail.new(ARGF.read())
+# Exit if there's nothing on STDIN
+exit(1) unless STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+
+mail = Mail.new(STDIN.read())
 
 @to = "@" + /^twitter\+([A-Za-z0-9_]+)@panic.com/.match(mail.to.first)[1] + " "
 
