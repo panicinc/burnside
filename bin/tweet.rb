@@ -77,8 +77,12 @@ reply_status_id = /^<(\d+)@.*>/.match(mail[:in_reply_to].decoded)[1]
 
 body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
 
+if /(.*)--/m.match(body)
 # Strip out the email signature
-@reply_text = /(.*)--/m.match(body)[1].strip
+	@reply_text = /(.*)--/m.match(body)[1].strip
+else
+	@reply_text = body
+end
 
 meta_count = "#{@to}#{@sig}".chars.count
 
