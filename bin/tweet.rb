@@ -71,7 +71,7 @@ mail = Mail.new(STDIN.read())
 
 @to = "@" + /^twitter\+([A-Za-z0-9_]+)@panic.com/.match(mail.to.first)[1] + " "
 
-@sig = " -" + mail[:from].decoded.chars.first
+@sig = " –" + mail[:from].decoded.chars.first
 
 reply_status_id = /^<(\d+)@.*>/.match(mail[:in_reply_to].decoded)[1]
 
