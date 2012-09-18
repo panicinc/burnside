@@ -68,19 +68,12 @@ end
 statusFile = 'config/' + @config['username'] + ".status"
 templateFile = 'config/' + @config['username'] + ".erb"
 
-lastStatusID = IO.read(statusFile) if File.exists?(statusFile)
-
-lastStatusID = nil if options[:dryrun]
+lastStatusID = (File.exists?(statusFile) && !options[:dryrun]) ? IO.read(statusFile) : nil
 
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
 
-mentions = ()
-if (lastStatusID)
-	mentions = @client.mentions(:since_id => lastStatusID)
-else
-	mentions = @client.mentions(:count => 10)
-end	
+mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID) : @client.mentions(:count => 10)
 
 exit if mentions.count == 0
 
