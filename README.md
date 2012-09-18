@@ -36,6 +36,11 @@ This task should be run via cron like
 	
 To handle incoming email you'll need to setup Procmail. There's a sample recipe in the config folder.
 
+Caveats
+-------
+
+Burnside was written to be used with Apple Mail so there are a few assumptions about email formatting.
+
 Contributing
 ------------
 
