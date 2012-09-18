@@ -34,27 +34,7 @@ This task should be run via cron like
 
 	*/5 * * * * cd $HOME/burnside; ./bin/fetch.rb -c config/username.yml
 	
-To bridge your email back to twitter get Procmail setup and then use the following recipe
-
-	:0
-	* !^X-Burnside: ignore
-	{
-		# Pipe the email into tweet.rb
-		:0 W
-		* !^FROM_DAEMON
-		ERROR=|/usr/bin/ruby $HOME/burnside/bin/tweet.rb -c $HOME/burnside/config/username.yml
-		# If that fails
-		:0 e
-		{
-		 # Data format error
-		 EXITCODE=65 
-		 :0
-		 /dev/null
-		}
-		# Delete successful tweets
-		:0:
-		/dev/null
-	}
+To handle incoming email you'll need to setup Procmail. There's a sample recipe in the config folder.
 
 Contributing
 ------------
