@@ -2,6 +2,7 @@ From: "<%= @mention.user.name %>" <<%= @config['mail']['mailbox'] %>+<%= @mentio
 Subject: Tweet from <%= @mention.user.name %> (@<%= @mention.user.screen_name %>)
 To: <%= @config['mail']['to'] %>
 Message-Id: <<%= @mention.id %>@<%= @config['mail']['mailbox'] %>.<%= @config['mail']['delivery_configuration'][:domain] %>>
+X-Burnside: ignore
 Content-Type: text/plain; charset=UTF-8
 
 <%= @mention.text %>
