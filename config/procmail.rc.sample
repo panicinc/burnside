@@ -1,0 +1,23 @@
+# back up everything. You can disable this once you're sure it's working correctly.
+:0 c
+backup
+
+:0
+* !^X-Burnside: ignore
+{
+	# Pipe the email into tweet.rb
+	:0 W
+	* !^FROM_DAEMON
+	ERROR=|/usr/bin/ruby $HOME/burnside/bin/tweet.rb -c $HOME/burnside/config/username.yml
+	# If that fails
+	:0 e
+	{
+	 # Bounce the message with a data format error and copy the offending message to an errors folder
+	 EXITCODE=65 
+	 :0
+	 errors
+	}
+	# store successful tweets
+	:0:
+	successful
+}
