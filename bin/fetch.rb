@@ -79,7 +79,7 @@ mentions = ()
 if (lastStatusID)
 	mentions = @client.mentions(:since_id => lastStatusID)
 else
-	mentions = @client.mentions(:count => 1)
+	mentions = @client.mentions(:count => 10)
 end	
 
 exit if mentions.count == 0
