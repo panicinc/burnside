@@ -93,7 +93,7 @@ puts msg if options[:verbose]
 char_count = msg.chars.count
 
 if char_count > 140
-	puts "Your message is too long: #{char_count} characters"
+	$stderr.puts "Your message is too long: #{char_count} characters"
 	exit(1)
 end
 
