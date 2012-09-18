@@ -70,27 +70,40 @@ exit(1) unless STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
 
 mail = Mail.new(STDIN.read())
 
+# Capture the twitter handle from the To: header
+to_regex = /^twitter\+([A-Za-z0-9_]+)@panic.com/
 
-@to = "@" + /^twitter\+([A-Za-z0-9_]+)@panic.com/.match(mail.to.first)[1] + " "
+if !(mail.to.first =~ to_regex)
+	$stderr.puts "The To: address isn't in the correct format"
+	exit(1)
+end
 
+@to = "@" + to_regex.match(mail.to.first)[1] + " "
+
+# Form the signature from the first letter of the sender's name
 @sig = " –" + mail[:from].decoded.chars.first
 
-reply_status_id = /^<(\d+)@.*>/.match(mail[:in_reply_to].decoded)[1]
+# Capture the status id of the tweet we're replying to
+reply_status_regex = /^<(\d+)@.*>/
+if !(mail[:in_reply_to].decoded !=~ reply_status_regex)
+	$stderr.puts "The In-Reply-To header isn't in the correct format"
+	exit(1)
+end
 
-untrusted_body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
+reply_status_id = reply_status_regex.match(mail[:in_reply_to].decoded)[1]
 
 # Apple Mail sends messages in windows-1252 when there are non-ascii characters present
+untrusted_body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
 ic = Iconv.new('UTF-8', 'WINDOWS-1252')
 body = ic.iconv(untrusted_body + ' ')[0..-2]
 
-if /(.*)--/m.match(body)
-# Strip out the email signature
-	@reply_text = /(.*)--/m.match(body)[1].strip
+# Strip out the signature
+signature_regex = /(.*)--/m
+if signature_regex.match(body)
+	@reply_text = signature_regex.match(body)[1].strip
 else
 	@reply_text = body
 end
-
-meta_count = "#{@to}#{@sig}".chars.count
 
 msg = "#{@to} #{@reply_text} #{@sig}"
 
@@ -103,10 +116,9 @@ if char_count > 140
 	exit(1)
 end
 
-
+# Update the Twitter status
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
-
 
 begin
 	@client.update(msg, {:in_reply_to_status_id => reply_status_id, :trim_user => 1}) unless options[:dryrun]
