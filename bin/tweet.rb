@@ -71,7 +71,7 @@ exit(1) unless STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
 mail = Mail.new(STDIN.read())
 
 # Capture the twitter handle from the To: header
-to_regex = /^twitter\+([A-Za-z0-9_]+)@panic.com/
+to_regex = /^#{@config['mail']['mailbox']}\+([A-Za-z0-9_]+)@#{@config['mail']['delivery_configuration'][:domain]}/
 
 if !(mail.to.first =~ to_regex)
 	$stderr.puts "The To: address isn't in the correct format"
