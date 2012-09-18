@@ -107,4 +107,9 @@ end
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
 
-@client.update(msg, {:in_reply_to_status_id => reply_status_id, :trim_user => 1}) unless options[:dryrun]
+
+begin
+	@client.update(msg, {:in_reply_to_status_id => reply_status_id, :trim_user => 1}) unless options[:dryrun]
+rescue
+	$stderr.print "Unable to post twitter update: " + $!
+end
