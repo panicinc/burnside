@@ -1,7 +1,7 @@
 From: "<%= @mention.user.name %>" <<%= @config['mail']['mailbox'] %>+<%= @mention.user.screen_name%>@<%= @config['mail']['delivery_configuration'][:domain] %>>
 Subject: Tweet from <%= @mention.user.name %> (@<%= @mention.user.screen_name %>)
 To: <%= @config['mail']['to'] %>
-Message-Id: <<%= @mention.id %>@<%= @config['mail']['mailbox'] %>.<%= @config['mail']['delivery_configuration'][:domain] %>>
+Message-Id: <<%= @mention.id %>@<%= @config['mail']['mailbox'] %>-<%= @config['auth_token'] %>.<%= @config['mail']['delivery_configuration'][:domain] %>>
 X-Burnside: ignore
 Content-Type: text/plain; charset=UTF-8
 

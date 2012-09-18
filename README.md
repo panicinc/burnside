@@ -22,6 +22,11 @@ Configuration
 
 You'll need to copy the two .sample files and rename them appropriately. Fill in the details of the
 of the .yml file with the OAuth information you got when you created and authorized your application.
+
+The `auth_token` field should contain a randomly generated password. A nice way to make one on Mac OS X
+is with
+
+	dd if=/dev/urandom count=4 2>/dev/null | openssl dgst -sha1
 	
 Usage
 -----
@@ -39,7 +44,7 @@ To handle incoming email you'll need to setup Procmail. There's a sample recipe 
 Caveats
 -------
 
-Burnside was written to be used with Apple Mail so there are a few assumptions about email formatting.
+Burnside was written to be used with Apple Mail so there are a few assumptions about how it formats emails.
 
 Contributing
 ------------

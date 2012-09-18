@@ -19,3 +19,5 @@ mail:
   to: support@example.com
   mailbox: twitter
 
+# a password that authenticates your email replies to the system
+auth_token: AUTH_TOKEN
