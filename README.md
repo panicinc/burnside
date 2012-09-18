@@ -1,7 +1,7 @@
 Burnside
 ========
 
-Burnside bridges twitter to email.
+Burnside bridges twitter to email and back.
 
 Installation
 ------------
