@@ -9,6 +9,7 @@ require 'oj'
 require 'mail'
 require 'uri'
 require 'erb'
+require 'iconv'
 
 options = {}
 
@@ -69,13 +70,18 @@ exit(1) unless STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
 
 mail = Mail.new(STDIN.read())
 
+
 @to = "@" + /^twitter\+([A-Za-z0-9_]+)@panic.com/.match(mail.to.first)[1] + " "
 
 @sig = " –" + mail[:from].decoded.chars.first
 
 reply_status_id = /^<(\d+)@.*>/.match(mail[:in_reply_to].decoded)[1]
 
-body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
+untrusted_body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
+
+# Apple Mail sends messages in windows-1252 when there are non-ascii characters present
+ic = Iconv.new('UTF-8', 'WINDOWS-1252')
+body = ic.iconv(untrusted_body + ' ')[0..-2]
 
 if /(.*)--/m.match(body)
 # Strip out the email signature
