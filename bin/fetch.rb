@@ -65,7 +65,7 @@ end
 
 @config = YAML.load_file(options[:config_file])
  
-statusFile = @config['username'] + ".status"
+statusFile = 'config/' + @config['username'] + ".status"
 templateFile = 'config/' + @config['username'] + ".erb"
 
 lastStatusID = IO.read(statusFile) if File.exists?(statusFile)
