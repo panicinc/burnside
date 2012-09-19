@@ -1,0 +1,3 @@
+<%= @mention.text %>
+
+<%= @mention.created_at %> - <%= @status_url %>

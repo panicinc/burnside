@@ -77,7 +77,9 @@ end
 @config = YAML.load_file(options[:config_file])
  
 statusFile = 'config/' + @config['username'] + ".status"
-templateFile = 'config/' + @config['username'] + ".erb"
+header_templateFile = 'config/' + @config['username'] + ".header.erb"
+html_templateFile = 'config/' + @config['username'] + ".html.erb"
+text_templateFile = 'config/' + @config['username'] + ".txt.erb"
 
 log = Logger.new('config/' + @config['username'] + '.log') if options[:log]
 log.info "Starting Up" if options[:log]
@@ -89,7 +91,7 @@ lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFil
 
 log.info "Last Status ID of #{@config['username']} is #{lastStatusID}" if options[:log]
 
-mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 3)
+mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 1)
 
 
 if mentions.count == 0
@@ -101,13 +103,28 @@ end
 
 latestStatusID = mentions.first.id
 	
-renderer = ERB.new(IO.read(templateFile))
+header_renderer = ERB.new(IO.read(header_templateFile))
+html_renderer = ERB.new(IO.read(html_templateFile))
+text_renderer = ERB.new(IO.read(text_templateFile))
 
 mentions.each do |@mention|
 	
 	@status_url = "https://twitter.com/#{@mention.user.screen_name}/status/#{@mention.id}"
 
-	mail = Mail.new(renderer.result())
+	mail = Mail.new(header_renderer.result())
+	
+	text_part = Mail::Part.new do
+		body text_renderer.result()
+	end
+	
+	html_part = Mail::Part.new do
+		body html_renderer.result()
+		content_type 'text/html; charset=UTF-8'
+	end
+	
+	mail.text_part = text_part
+	mail.html_part = html_part
+	
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	

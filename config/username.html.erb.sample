@@ -1,0 +1,12 @@
+<html>
+<head>
+</head>
+
+<body>
+<img src="<%= @mention.user.profile_image_url %>">
+
+<p><%= @mention.text %></p>
+
+<p><a href="<%= @status_url %>"><%= @mention.created_at.ctime %></a></p>
+</body>
+</html>
