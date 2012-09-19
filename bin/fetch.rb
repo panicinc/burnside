@@ -114,6 +114,7 @@ mentions.each do |@mention|
 	mail = Mail.new(header_renderer.result())
 	
 	text_part = Mail::Part.new do
+		content_type 'text/plain; charset=UTF-8'
 		body text_renderer.result()
 	end
 	
