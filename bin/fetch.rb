@@ -100,7 +100,6 @@ else
 end
 
 latestStatusID = mentions.first.id
-File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
 	
 renderer = ERB.new(IO.read(templateFile))
 
@@ -112,14 +111,11 @@ mentions.each do |@mention|
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	
-	if options[:dryrun]
-		log.info "DRY RUN: Not mailing new tweet from #{@mention.user.screen_name}" if options[:log]
-	else
-		log.info "Mailing New tweet from #{@mention.user.screen_name}" if options[:log]
-	end
+	log.info "New tweet from #{@mention.user.screen_name}: #{@mention.id}" if options[:log]
 
 	puts mail.to_s if options[:verbose]
 
 	mail.deliver
 end
+File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
 log.info "Shutting Down" if options[:log]
