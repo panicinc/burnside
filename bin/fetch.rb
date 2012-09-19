@@ -89,7 +89,7 @@ lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFil
 
 log.info "Last Status ID of #{@config['username']} is #{lastStatusID}" if options[:log]
 
-mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID) : @client.mentions(:count => 3)
+mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 3)
 
 
 if mentions.count == 0
