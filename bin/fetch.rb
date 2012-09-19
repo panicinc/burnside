@@ -40,6 +40,11 @@ optparse = OptionParser.new do |opts|
 		options[:dryrun] = true
 	end
 
+	options[:test] = false
+	opts.on( '-t', '--test', "Ignore status file and always fetch tweets" ) do
+		options[:test] = true
+	end
+
 	opts.on_tail('-h', '--help', 'Display this help') do 
 		puts opts
 		exit
@@ -55,12 +60,12 @@ begin
 		puts "Missing options: #{missing.join(', ')}"
 		puts
 		puts optparse
-		exit
+		exit(1)
 	end
 rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 	puts $!.to_s
 	puts optparse
-	exit
+	exit(1)
 end
 
 @config = YAML.load_file(options[:config_file])
@@ -68,12 +73,12 @@ end
 statusFile = 'config/' + @config['username'] + ".status"
 templateFile = 'config/' + @config['username'] + ".erb"
 
-lastStatusID = (File.exists?(statusFile) && !options[:dryrun]) ? IO.read(statusFile) : nil
+lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFile) : nil
 
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
 
-mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID) : @client.mentions(:count => 10)
+mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID) : @client.mentions(:count => 3)
 
 exit if mentions.count == 0
 
