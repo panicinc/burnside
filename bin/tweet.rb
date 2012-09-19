@@ -62,7 +62,6 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 	exit
 end
 
-
 @config = YAML.load_file(options[:config_file])
 
 # Exit if there's nothing on STDIN
@@ -93,8 +92,21 @@ end
 
 reply_status_id = reply_status_regex.match(mail[:in_reply_to].decoded)[1]
 
+# We need to extract the text part from the message
+decoded_body = ""
+
+if (mail.multipart?)
+	mail.parts.each do |part|
+		if part.content_type =~ /plain/
+			decoded_body = part.body.decoded
+		end
+	end
+else
+	decoded_body = mail.body.decoded
+end
+
 # Apple Mail sends messages in windows-1252 when there are non-ascii characters present
-untrusted_body = /(.*)(On.*wrote:.*)/m.match(mail.body.decoded)[1].strip
+untrusted_body = /(.*)(On.*wrote:.*)/m.match(decoded_body)[1].strip
 ic = Iconv.new('UTF-8', 'WINDOWS-1252')
 body = ic.iconv(untrusted_body + ' ')[0..-2]
 
