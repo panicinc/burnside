@@ -1,3 +1,4 @@
 config/*.erb
 config/*.yml
 config/*.status
+config/*.log
