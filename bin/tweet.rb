@@ -85,7 +85,6 @@ end
 
 # Capture the status id of the tweet we're replying to
 reply_status_regex = /^<(\d+)@#{@config['mail']['mailbox']}-#{@config['auth_token']}\.#{@config['mail']['delivery_configuration'][:domain]}>/
-pp reply_status_regex
 
 if !(mail[:in_reply_to].decoded =~ reply_status_regex)
 	$stderr.puts "The In-Reply-To header isn't in the correct format"
