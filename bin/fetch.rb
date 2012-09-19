@@ -11,6 +11,7 @@ require 'mail'
 require 'uri'
 require 'yaml'
 require 'erb'
+require 'logger'
 
 options = {}
 
@@ -35,6 +36,11 @@ optparse = OptionParser.new do |opts|
 		options[:verbose] = true
 	end
 
+	options[:log] = false
+	opts.on( '-l', '--log', 'Log script progess' ) do
+		options[:log] = true
+	end
+
 	options[:dryrun] = false
 	opts.on( '-n', '--dry-run', "Don't send any email" ) do
 		options[:dryrun] = true
@@ -57,14 +63,14 @@ begin
 	mandatory = [:config_file]
 	missing = mandatory.select{ |param| options[param].nil? }
 	if not missing.empty?
-		puts "Missing options: #{missing.join(', ')}"
-		puts
-		puts optparse
+		$stderr.puts "Missing options: #{missing.join(', ')}"
+		$stderr.puts
+		$stderr.puts optparse
 		exit(1)
 	end
 rescue OptionParser::InvalidOption, OptionParser::MissingArgument
-	puts $!.to_s
-	puts optparse
+	$stderr.puts $!.to_s
+	$stderr.puts optparse
 	exit(1)
 end
 
@@ -73,14 +79,25 @@ end
 statusFile = 'config/' + @config['username'] + ".status"
 templateFile = 'config/' + @config['username'] + ".erb"
 
+log = Logger.new('config/' + @config['username'] + '.log') if options[:log]
+log.info "Starting Up" if options[:log]
+
 lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFile) : nil
 
 @client = Twitter::Client.new(@config['oauth'])
 @client.user(@config['username'])
 
+log.info "Last Status ID of #{@config['username']} is #{lastStatusID}" if options[:log]
+
 mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID) : @client.mentions(:count => 3)
 
-exit if mentions.count == 0
+
+if mentions.count == 0
+	log.info "No mentions found; shutting down" if options[:log]
+	exit
+else
+	log.info "Found #{mentions.count} mentions" if options[:log]
+end
 
 latestStatusID = mentions.first.id
 File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
@@ -95,7 +112,14 @@ mentions.each do |@mention|
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	
+	if options[:dryrun]
+		log.info "DRY RUN: Not mailing new tweet from #{@mention.user.screen_name}" if options[:log]
+	else
+		log.info "Mailing New tweet from #{@mention.user.screen_name}" if options[:log]
+	end
+
 	puts mail.to_s if options[:verbose]
 
 	mail.deliver
 end
+log.info "Shutting Down" if options[:log]
