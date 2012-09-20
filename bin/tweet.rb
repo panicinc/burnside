@@ -106,7 +106,7 @@ else
 end
 
 # Apple Mail sends messages in windows-1252 when there are non-ascii characters present
-untrusted_body = /(.*)(On.*wrote:.*)/m.match(decoded_body)[1].strip
+untrusted_body = /(.*)On.*wrote:.*/m.match(decoded_body)[1].strip
 ic = Iconv.new('UTF-8', 'WINDOWS-1252')
 body = ic.iconv(untrusted_body + ' ')[0..-2]
 
