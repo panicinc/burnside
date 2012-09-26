@@ -2,6 +2,11 @@
 :0 c
 backup
 
+# Catch bounces and put them in the error box
+:0
+* ^FROM_DAEMON
+errors
+
 :0
 * !^X-Burnside: ignore
 {
