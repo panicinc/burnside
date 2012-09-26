@@ -1,7 +1,11 @@
 Burnside
 ========
 
-Burnside bridges twitter to email and back.
+Burnside bridges Twitter to email and back.
+
+It's particularly useful for companies that provide Twitter support. By handling @questions through an e-mail client, support agents can reply to tweets much quicker, answered tweets can be trackde by "Archiving" them, multiple agents can work out of the same box, and an easily-searchable (via Mail) archive of tweets can be built over time.
+
+Burnside requires server-level skills and is intended for system administrators to install.
 
 Installation
 ------------
