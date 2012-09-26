@@ -3,10 +3,14 @@
 </head>
 
 <body>
-<img src="<%= @mention.user.profile_image_url %>">
-
-<p><%= @mention.text %></p>
-
-<p><a href="<%= @status_url %>"><%= @mention.created_at.ctime %></a></p>
+<p style="margin: 0 0 20px 0">
+<%= @mention.text %>
+</p>
+<p style="margin: 0px;">
+<img src="<%= @mention.user.profile_image_url %>" align="left" style="margin-right: 10px; margin-top:3px" />
+<h3 style="margin: 0px; font-size: 16px; line-height: 18px;"><%= @mention.user.name %></h3>
+<h4 style="margin: 0px; font-weight: normal; font-size: 14px; line-height: 18px; color: #aaa;"><%= @mention.user.screen_name %></h4>
+<a href="<%= @status_url %>" style="color: #86a6c1; font-size:12px; line-height: 18px;"><%= @mention.created_at.ctime %></a>
+</p>
 </body>
 </html>
