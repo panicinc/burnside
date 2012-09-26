@@ -1,7 +1,7 @@
 Burnside
 ========
 
-Burnside bridges Twitter to email and back.
+Panic's Burnside bridges Twitter to email and back.
 
 It's particularly useful for companies that provide Twitter support. By handling @questions through an e-mail client, support agents can reply to tweets much quicker, answered tweets can be tracked by "Archiving" them or moving them to a subfolder, multiple agents can work out of the same mailbox (via IMAP), and an easily-searchable archive of tweets can be built over time.
 
@@ -54,4 +54,4 @@ Feel free to fork and send us pull requests
 Bug Reporting
 -------------
 
-Please file bugs as https://hive.panic.com in the Burnside project. You have to register first.
+Please file bugs as https://hive.panic.com in the Burnside project. You have to register first, via the Register link in the upper-right hand corner.
