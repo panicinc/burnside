@@ -46,3 +46,8 @@ Contributing
 ------------
 
 Feel free to fork and send us pull requests
+
+Bug Reporting
+-------------
+
+Please file bugs as https://hive.panic.com in the Burnside project. You have to register first.
