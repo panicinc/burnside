@@ -15,6 +15,7 @@ require 'logger'
 
 options = {}
 
+#! Options Parsing
 optparse = OptionParser.new do |opts|
 
 	opts.banner = "Usage: #{__FILE__} -c CONFIG_FILE [options]"
