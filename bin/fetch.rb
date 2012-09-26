@@ -87,13 +87,24 @@ log.info "Starting Up" if options[:log]
 
 lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFile) : nil
 
-@client = Twitter::Client.new(@config['oauth'])
-@client.user(@config['username'])
+begin
+	@client = Twitter::Client.new(@config['oauth'])
+	@client.user(@config['username'])
+rescue
+	log.error "An error occured while configuring the client: " + $! if options[:log]
+	log.error "Bailing Out!" if options[:log]		
+	exit(1)		
+end
 
 log.info "Last Status ID of #{@config['username']} is #{lastStatusID}" if options[:log]
 
-mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 1)
-
+begin
+	mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 1)
+rescue
+	log.error "An error occured while fetching the mentions: " + $! if options[:log]
+	log.error "Bailing Out!" if options[:log]
+	exit(1)		
+end
 
 if mentions.count == 0
 	log.info "No mentions found; shutting down" if options[:log]
