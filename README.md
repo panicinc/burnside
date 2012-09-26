@@ -54,4 +54,4 @@ Feel free to fork and send us pull requests
 Bug Reporting
 -------------
 
-Please file bugs as https://hive.panic.com in the Burnside project. You have to register first, via the Register link in the upper-right hand corner.
+Burnside is an unsupported, unofficial Panic product. But, if you can't contribute directly, please file bugs as https://hive.panic.com in the Burnside project. You have to register first, via the Register link in the upper-right hand corner.
