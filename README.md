@@ -10,7 +10,7 @@ It's particularly useful for companies that provide Twitter support. By handling
 - Procmail (already working with user accounts on an IMAP/SMTP server)
 - Cron
 - Ruby
-- SMTP server with "+" character recipient delimiter enabled for subaddressing
+- SMTP server that supports "+" character recipient delimiter for sub-addressing
 
 Other configurations may be possible based on your expertise.
 
