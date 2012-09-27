@@ -63,12 +63,12 @@ Create a new [Twitter Application](https://dev.twitter.com/apps/new) and get its
 Configuration
 -------------
 
-Copy the .sample files and rename them. For these instructions we'll assume you make a configuration set named "transmit". You should end up with the following files:
+Copy the .sample files and rename them. For these instructions we'll assume you make a configuration set named "PanicGWTest". You should end up with the following files:
 
-- transmit.header.erb
-- transmit.html.erb
-- transmit.txt.erb
-- transmit.yml
+- PanicGWTest.header.erb
+- PanicGWTest.html.erb
+- PanicGWTest.txt.erb
+- PanicGWTest.yml
 
 Fill in the details of the .yml file with the OAuth information you got when you created and authorized your application.
 
@@ -87,13 +87,13 @@ Usage
 
 To bridge your tweets to email you'll run bin/fetch.rb as follows
 
-	./bin/fetch.rb -c config/transmit.yml
+	./bin/fetch.rb -c config/PanicGWTest.yml
 	
 This task could be run via cron like
 
-	*/5 * * * * cd $HOME/burnside; ./bin/fetch.rb -c config/transmit.yml
+	*/5 * * * * cd $HOME/burnside; ./bin/fetch.rb -c config/PanicGWTest.yml
 	
-To handle incoming email you'll need to setup Procmail. There's a sample recipe in the config folder.
+To handle incoming email you'll need to setup Procmail. There's a sample recipe in the config folder. Alternatively, you could write a script that accesses your IMAP inbox and then pipe messages through `tweet.rb`. Frankly, if you don't already have Procmail setup then this might be a less painful approach.
 
 Caveats
 -------
@@ -108,4 +108,4 @@ Feel free to fork and send us pull requests
 Bug Reporting
 -------------
 
-Burnside is an unsupported, unofficial Panic product. But, if you can't contribute directly, please file bugs as https://hive.panic.com in the Burnside project. You have to register first, via the Register link in the upper-right hand corner.
+Burnside is an unsupported, unofficial Panic product. But, if you can't contribute directly, please file bugs at https://hive.panic.com in the Burnside project. You have to register first, via the [Register](https://hive.panic.com/account/register) link in the upper-right hand corner.
