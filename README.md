@@ -5,11 +5,12 @@ Panic's Burnside bridges Twitter to email and back.
 
 It's particularly useful for companies that provide Twitter support. By handling @questions through an e-mail client, support agents can reply to tweets much quicker, answered tweets can be tracked by "Archiving" them or moving them to a subfolder, multiple agents can work out of the same mailbox (via IMAP), and an easily-searchable archive of tweets can be built over time.
 
-Burnside is intended for shell-level server administrators, and requires:
+Burnside is intended for shell-level/e-mail server administrators, and requires:
 
 - Procmail (already working with user accounts on an IMAP/SMTP server)
 - Cron
 - Ruby
+- SMTP server with "+" character recipient delimiter enabled for subaddressing
 
 Other configurations may be possible based on your expertise.
 
