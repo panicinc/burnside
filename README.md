@@ -109,3 +109,8 @@ Bug Reporting
 -------------
 
 Burnside is an unsupported, unofficial Panic product. But, if you can't contribute directly, please file bugs at https://hive.panic.com in the Burnside project. You have to register first, via the [Register](https://hive.panic.com/account/register) link in the upper-right hand corner.
+
+Extras
+------
+
+See [Burnside Mail Plugin](https://github.com/panicinc/burnside-plugin), our plugin for Apple Mail that adds a character count to ensure that your Tweets aren't too long.
