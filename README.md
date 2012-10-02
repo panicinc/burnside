@@ -10,7 +10,7 @@ It's particularly useful for companies that provide Twitter support. By handling
 - Procmail (already working with user accounts on an IMAP/SMTP server)
 - Cron
 - Ruby
-- SMTP server with "+" character recipient delimiter enabled for subaddressing
+- SMTP server that supports "+" character recipient delimiter for sub-addressing
 
 Other configurations may be possible based on your expertise.
 
@@ -46,7 +46,7 @@ The format of the new tweet is
 `sig` is a space followed by an em-dash followed by the first letter of the sender's name in the `From:` header of the reply. Currently `tweet.rb` splits the reply text using the regex `/(.*)On.*wrote:.*/m` so this will obviously be a problem for non-English users.
 
 
-Dependancies
+Dependencies
 ------------
 
 ```console
@@ -58,7 +58,7 @@ bundle install --deployment
 	
 Twitter Application
 -------------------
-Create a new [Twitter Application](https://dev.twitter.com/apps/new) and get its consumer key and secret as well as authorize your account to make use of it.
+Create a new [Twitter Application](https://dev.twitter.com/apps/new) and get its consumer key and secret. Then, authorize it within your account to make use of it.
 
 Configuration
 -------------
@@ -93,12 +93,12 @@ This task could be run via cron like
 
 	*/5 * * * * cd $HOME/burnside; ./bin/fetch.rb -c config/PanicGWTest.yml
 	
-To handle incoming email you'll need to setup Procmail. There's a sample recipe in the config folder. Alternatively, you could write a script that accesses your IMAP inbox and then pipe messages through `tweet.rb`. Frankly, if you don't already have Procmail setup then this might be a less painful approach.
+To handle incoming email, you'll need to setup Procmail. There's a sample recipe in the config folder. Alternatively, you could write a script that accesses your IMAP inbox and then pipe messages through `tweet.rb`. Frankly, if you don't already have Procmail setup then this might be a less painful approach.
 
 Caveats
 -------
 
-Burnside was written to be used with Apple Mail so there are a few assumptions about how it formats emails.
+Burnside was written to be used with Apple Mail, so there are a few assumptions about how it formats emails.
 
 Contributing
 ------------
@@ -109,3 +109,8 @@ Bug Reporting
 -------------
 
 Burnside is an unsupported, unofficial Panic product. But, if you can't contribute directly, please file bugs at https://hive.panic.com in the Burnside project. You have to register first, via the [Register](https://hive.panic.com/account/register) link in the upper-right hand corner.
+
+Extras
+------
+
+See [Burnside Mail Plugin](https://github.com/panicinc/burnside-plugin), our plugin for Apple Mail that adds a character count to ensure that your Tweets aren't too long.
