@@ -126,6 +126,8 @@ char_count = msg.chars.count
 
 if char_count > 140
 	$stderr.puts "Your message is too long: #{char_count} characters"
+	$stderr.puts msg
+	$stderr.puts "----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|"
 	exit(1)
 end
 
