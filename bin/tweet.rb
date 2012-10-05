@@ -10,6 +10,13 @@ require 'mail'
 require 'uri'
 require 'erb'
 require 'iconv'
+require 'active_support'
+
+class String
+  def display_length
+    ActiveSupport::Multibyte::Chars.new(self).normalize(:c).length
+  end
+end
 
 options = {}
 
@@ -122,7 +129,7 @@ msg = "#{@to} #{@reply_text} #{@sig}"
 
 puts msg if options[:verbose]
 
-char_count = msg.chars.count
+char_count = msg.display_length
 
 if char_count > 140
 	$stderr.puts "Your message is too long: #{char_count} characters"
