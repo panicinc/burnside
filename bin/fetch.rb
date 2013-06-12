@@ -3,9 +3,10 @@
 require "rubygems"
 require "bundler/setup"
 gem 'twitter'
-gem 'oj'
-gem 'mail'
 
+require 'twitter'
+require 'oj'
+require 'mail'
 require 'optparse'
 require 'pp'
 require 'date'
