@@ -83,8 +83,13 @@ header_templateFile = 'config/' + @config['username'] + ".header.erb"
 html_templateFile = 'config/' + @config['username'] + ".html.erb"
 text_templateFile = 'config/' + @config['username'] + ".txt.erb"
 
-log = Logger.new('config/' + @config['username'] + '.log') if options[:log]
-log.info "Starting Up" if options[:log]
+if options[:log]
+  log = Logger.new('config/' + @config['username'] + '.log', 'weekly')
+else
+  log = Logger.new(STDOUT)
+end
+
+log.info "Starting Up"
 
 lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFile) : nil
 
@@ -92,26 +97,26 @@ begin
 	@client = Twitter::Client.new(@config['oauth'])
 	@client.user(@config['username'])
 rescue
-	log.error "An error occured while configuring the client: " + $! if options[:log]
-	log.error "Bailing Out!" if options[:log]		
+	log.error "An error occured while configuring the client: " + $!
+	log.error "Bailing Out!"		
 	exit(1)		
 end
 
-log.info "Last Status ID of #{@config['username']} is #{lastStatusID}" if options[:log]
+log.info "Last Status ID of #{@config['username']} is #{lastStatusID}"
 
 begin
 	mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 1)
 rescue
-	log.error "An error occured while fetching the mentions: " + $! if options[:log]
-	log.error "Bailing Out!" if options[:log]
+	log.error "An error occured while fetching the mentions: " + $!
+	log.error "Bailing Out!"
 	exit(1)		
 end
 
 if mentions.count == 0
-	log.info "No mentions found; shutting down" if options[:log]
+	log.info "No mentions found; shutting down"
 	exit
 else
-	log.info "Found #{mentions.count} mentions" if options[:log]
+	log.info "Found #{mentions.count} mentions"
 end
 
 latestStatusID = lastStatusID
@@ -142,7 +147,7 @@ mentions.reverse.each do |@mention|
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	
-	log.info "New tweet from #{@mention.user.screen_name}: #{@mention.id} #{@mention.created_at}" if options[:log]
+	log.info "New tweet from #{@mention.user.screen_name}: #{@mention.id} #{@mention.created_at}"
 
 	puts mail.to_s if options[:verbose]
 
@@ -150,8 +155,8 @@ mentions.reverse.each do |@mention|
 		mail.deliver
 		latestStatusID = @mention.id
 	rescue
-		log.error "An error occured during delivery:" + $! if options[:log]
+		log.error "An error occured during delivery:" + $!
 	end
 end
 File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
-log.info "Shutting Down" if options[:log]
+log.info "Shutting Down"
