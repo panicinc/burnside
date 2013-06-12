@@ -2,12 +2,13 @@
 
 require "rubygems"
 require "bundler/setup"
-require "twitter"
+gem 'twitter'
+gem 'oj'
+gem 'mail'
+
 require 'optparse'
 require 'pp'
 require 'date'
-require 'oj'
-require 'mail'
 require 'uri'
 require 'yaml'
 require 'erb'
