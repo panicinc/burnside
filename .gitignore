@@ -2,3 +2,8 @@ config/*.erb
 config/*.yml
 config/*.status
 config/*.log
+**/.DS_Store
+/.bundle/
+/.ruby-version
+/.DS_Store
+/vendor/
