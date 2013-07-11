@@ -88,7 +88,10 @@ end
 @to = "@" + to_regex.match(mail.to.first)[1]
 
 # Form the signature from the first letter of the sender's name
-@sig = "—" + mail[:from].decoded.chars.first
+first_char = mail[:from].decoded.chars.first
+first_char = mail[:from].decoded.chars[1] if first_char == '"'
+
+@sig = "—" + first_char
 
 # Capture the status id of the tweet we're replying to
 reply_status_regex = /^<(\d+)@#{@config['mail']['mailbox']}-#{@config['auth_token']}\.#{@config['mail']['delivery_configuration'][:domain]}>/
