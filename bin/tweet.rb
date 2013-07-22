@@ -78,14 +78,14 @@ mail = Mail.new(STDIN.read())
 charset = "utf-8"
 
 # Capture the twitter handle from the To: header
-to_regex = /.*<#{@config['mail']['mailbox']}\+([A-Za-z0-9_]+)@#{@config['mail']['delivery_configuration'][:domain]}>/
+to_regex = /#{@config['mail']['mailbox']}\+([A-Za-z0-9_]+)@#{@config['mail']['delivery_configuration'][:domain]}/
 
-if !(mail.to =~ to_regex)
+@to = "@" + to_regex.match(mail.to.first)[1]
+
+if !@to
 	$stderr.puts "The To: address isn't in the correct format"
 	exit(1)
 end
-
-@to = "@" + to_regex.match(mail.to)[1]
 
 # Form the signature from the first letter of the sender's name
 first_char = mail[:from].decoded.chars.first
