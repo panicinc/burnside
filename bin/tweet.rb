@@ -80,12 +80,15 @@ charset = "utf-8"
 # Capture the twitter handle from the To: header
 to_regex = /#{@config['mail']['mailbox']}\+([A-Za-z0-9_]+)@#{@config['mail']['delivery_configuration'][:domain]}/
 
-@to = "@" + to_regex.match(mail.to.first)[1]
+to_line = mail.to.first
+matches = to_regex.match(to_line)
 
-if !@to
-	$stderr.puts "The To: address isn't in the correct format"
+if !matches
+	$stderr.puts "The To: address (#{to_line}) isn't in the correct format. Make sure the account matches the setting in your config file: #{@config['mail']['mailbox']}"
 	exit(1)
 end
+
+@to = "@" + matches[1]
 
 # Form the signature from the first letter of the sender's name
 first_char = mail[:from].decoded.chars.first
@@ -119,7 +122,18 @@ else
 end
 
 # Apple Mail sends messages in windows-1252 when there are non-ascii characters present so we need to re-encode to UTF-8
-untrusted_body = /(.*)On .* wrote:.*/m.match(decoded_body)[1].strip
+matches = /(.*)On .* wrote:.*/m.match(decoded_body)
+
+if !matches
+  $stderr.puts "Couldn't parse the message body"
+  exit(1)
+end
+
+untrusted_body = matches[1]
+
+untrusted_body.chop!.chop! if untrusted_body[-2,2] == "> "
+untrusted_body = untrusted_body.strip
+
 ic = Iconv.new('UTF-8', charset)
 
 body = ic.iconv(untrusted_body + ' ')[0..-2]
