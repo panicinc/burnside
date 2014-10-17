@@ -131,7 +131,12 @@ end
 
 untrusted_body = matches[1]
 
+# kill the > that 10.10 mail adds
 untrusted_body.chop!.chop! if untrusted_body[-2,2] == "> "
+
+# kill the extra links that 10.10 mail adds
+untrusted_body.gsub!(/\<http.*\>/, '')
+
 untrusted_body = untrusted_body.strip
 
 ic = Iconv.new('UTF-8', charset)
