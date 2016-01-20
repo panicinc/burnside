@@ -126,9 +126,9 @@ header_renderer = ERB.new(IO.read(header_templateFile))
 html_renderer = ERB.new(IO.read(html_templateFile))
 text_renderer = ERB.new(IO.read(text_templateFile))
 
-mentions.reverse.each do |@mention|
+mentions.reverse.each do |mention|
 	
-	@status_url = "https://twitter.com/#{@mention.user.screen_name}/status/#{@mention.id}"
+	@status_url = "https://twitter.com/#{mention.user.screen_name}/status/#{mention.id}"
 
 	mail = Mail.new(header_renderer.result())
 	
@@ -148,13 +148,13 @@ mentions.reverse.each do |@mention|
 	mail.delivery_method @config['mail']['delivery_method'], @config['mail']['delivery_configuration']
 	mail.delivery_method :test if (options[:dryrun])
 	
-	log.info "New tweet from #{@mention.user.screen_name}: #{@mention.id} #{@mention.created_at}"
+	log.info "New tweet from #{mention.user.screen_name}: #{mention.id} #{mention.created_at}"
 
 	puts mail.to_s if options[:verbose]
 
 	begin
 		mail.deliver
-		latestStatusID = @mention.id
+		latestStatusID = mention.id
 	rescue
 		log.error "An error occured during delivery:" + $!
 	end
