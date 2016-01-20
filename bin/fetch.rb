@@ -97,8 +97,8 @@ lastStatusID = (File.exists?(statusFile) && !options[:test]) ? IO.read(statusFil
 begin
 	@client = Twitter::Client.new(@config['oauth'])
 	@client.user(@config['username'])
-rescue
-	log.error "An error occured while configuring the client: " + $!
+rescue Exception => ex
+  log.error "An error occured while configuring the client: #{ex.message}"
 	log.error "Bailing Out!"		
 	exit(1)		
 end
@@ -107,8 +107,8 @@ log.info "Last Status ID of #{@config['username']} is #{lastStatusID}"
 
 begin
 	mentions = lastStatusID ? @client.mentions(:since_id => lastStatusID, :count => 200) : @client.mentions(:count => 1)
-rescue
-	log.error "An error occured while fetching the mentions: " + $!
+rescue Exception => ex
+	log.error "An error occured while fetching the mentions: #{ex.message}"
 	log.error "Bailing Out!"
 	exit(1)		
 end
@@ -128,6 +128,8 @@ text_renderer = ERB.new(IO.read(text_templateFile))
 
 mentions.reverse.each do |mention|
 	
+  @mention = mention
+  
 	@status_url = "https://twitter.com/#{mention.user.screen_name}/status/#{mention.id}"
 
 	mail = Mail.new(header_renderer.result())
@@ -155,8 +157,8 @@ mentions.reverse.each do |mention|
 	begin
 		mail.deliver
 		latestStatusID = mention.id
-	rescue
-		log.error "An error occured during delivery:" + $!
+  rescue Exception => ex
+		log.error "An error occured during delivery: #{ex.message}"
 	end
 end
 File.open(statusFile, 'w') {|f| f.write(latestStatusID) } unless options[:dryrun]
